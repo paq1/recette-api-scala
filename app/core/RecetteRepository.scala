@@ -1,9 +1,9 @@
 package core
 
-import models.Recette
+import models.Blague
 
 import scala.concurrent.Future
 
 trait RecetteRepository {
-  def findAll(limit: Int = 100): Future[List[Recette]]
+  def findAll(limit: Int = 100): Future[List[Blague]]
 }
