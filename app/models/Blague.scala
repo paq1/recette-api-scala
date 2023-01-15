@@ -1,10 +1,10 @@
 package models
 
-import play.api.libs.json.{Json, Writes}
+import play.api.libs.json.{JsResult, JsSuccess, JsValue, Json, Reads, Writes}
 
 
 case class Blague(
-    _id: String,
+    _id: Option[String],
     description: String
 ) extends Serializable
 
@@ -12,5 +12,12 @@ object Blague {
   implicit val owrites: Writes[Blague] = (o: Blague) => Json.obj(
     "id" -> o._id,
     "description" -> o.description
+  )
+
+  implicit val oread: Reads[Blague] = (js: JsValue) => JsSuccess(
+    Blague(
+      (js \ "_id").asOpt[String],
+      (js \ "description").as[String]
+    )
   )
 }

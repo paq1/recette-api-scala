@@ -1,5 +1,7 @@
 package controllers
 
+import com.fasterxml.jackson.annotation.JsonValue
+import models.Blague
 import play.api.libs.json.Json
 import play.api.mvc._
 import repository.RecetteRepositoryImpl
@@ -25,8 +27,18 @@ class RecetteController @Inject() (
    * a path of `/`.
    */
   def index(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+
     recetteRepositoryImpl.findAll().map{
       recette => Ok(Json.toJson(recette))
     }
+  }
+
+  def create(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
+
+    val b = request.body.asJson.get.as[Blague]
+
+    recetteRepositoryImpl
+      .insert(b)
+      .map(_ => Ok(Json.toJson(b)))
   }
 }
