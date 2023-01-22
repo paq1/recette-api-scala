@@ -1,10 +1,9 @@
 package controllers
 
-import com.fasterxml.jackson.annotation.JsonValue
 import models.Blague
 import play.api.libs.json.Json
 import play.api.mvc._
-import repository.RecetteRepositoryImpl
+import repository.BlagueRepositoryImpl
 
 import javax.inject._
 import scala.concurrent.ExecutionContext
@@ -14,9 +13,9 @@ import scala.concurrent.ExecutionContext
  * application's home page.
  */
 @Singleton
-class RecetteController @Inject() (
+class BlagueController @Inject()(
     val controllerComponents: ControllerComponents,
-    val recetteRepositoryImpl: RecetteRepositoryImpl
+    val blagueRepositoryImpl: BlagueRepositoryImpl
 )(implicit ec: ExecutionContext) extends BaseController {
 
   /**
@@ -28,7 +27,7 @@ class RecetteController @Inject() (
    */
   def index(): Action[AnyContent] = Action.async { implicit request: Request[AnyContent] =>
 
-    recetteRepositoryImpl.findAll().map{
+    blagueRepositoryImpl.findAll().map{
       recette => Ok(Json.toJson(recette))
     }
   }
@@ -37,7 +36,7 @@ class RecetteController @Inject() (
 
     val b = request.body.asJson.get.as[Blague]
 
-    recetteRepositoryImpl
+    blagueRepositoryImpl
       .insert(b)
       .map(_ => Ok(Json.toJson(b)))
   }

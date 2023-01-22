@@ -1,6 +1,6 @@
 package models
 
-import play.api.libs.json.{JsResult, JsSuccess, JsValue, Json, Reads, Writes}
+import play.api.libs.json._
 
 
 case class Blague(

@@ -16,7 +16,7 @@ class RecetteControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inject
   "HomeController GET" should {
 
     "render the index page from a new instance of controller" in {
-      val controller = new RecetteController(stubControllerComponents())
+      val controller = new BlagueController(stubControllerComponents())
       val home = controller.index().apply(FakeRequest(GET, "/"))
 
       status(home) mustBe OK
@@ -25,7 +25,7 @@ class RecetteControllerSpec extends PlaySpec with GuiceOneAppPerTest with Inject
     }
 
     "render the index page from the application" in {
-      val controller = inject[RecetteController]
+      val controller = inject[BlagueController]
       val home = controller.index().apply(FakeRequest(GET, "/"))
 
       status(home) mustBe OK
