@@ -1,10 +1,12 @@
 package repository
 
 import core.RecetteRepository
-import models.recette.{Etape, Recette}
-import org.mongodb.scala.bson.{BsonArray, BsonDocument, BsonValue}
+import models.MongoId
+import models.recette.Recette
+import org.mongodb.scala.bson.BsonDocument
 import org.mongodb.scala.{Document, MongoClient, MongoDatabase}
 import play.api.Configuration
+import play.api.libs.json.Json
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
@@ -49,4 +51,19 @@ class RecetteRepositoryImpl @Inject() (implicit
     )
     .toFuture()
     .map(_ => ())
+
+  // todo test
+  override def removeOne(id: String): Future[Unit] = db
+    .getCollection(collectionName)
+    .deleteOne(
+      BsonDocument(
+        Json.stringify(
+          Json.toJson(MongoId(id))
+        )
+      )
+    )
+    .toFuture()
+    .map { _ =>
+      ()
+    }
 }
