@@ -4,8 +4,10 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET      /                           controllers.BlagueController.index()
-POST     /create                     controllers.BlagueController.create()
+GET         /blague/               controllers.BlagueController.index()
+POST        /blague/create         controllers.BlagueController.create()
+GET         /recette/              controllers.RecetteController.index()
+POST        /recette/create        controllers.RecetteController.create()
 
 # Map static resources from the /public folder to the /assets URL path
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)

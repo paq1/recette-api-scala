@@ -2,15 +2,12 @@ package repository
 
 import core.RecetteRepository
 import models.recette.{Etape, Recette}
-import org.bson.BSONObject
-import org.mongodb.scala.bson.{BsonArray, BsonValue}
+import org.mongodb.scala.bson.{BsonArray, BsonDocument, BsonValue}
 import org.mongodb.scala.{Document, MongoClient, MongoDatabase}
 import play.api.Configuration
 
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.Failure
-import scala.util.control.NonFatal
 
 class RecetteRepositoryImpl @Inject() (implicit
     executionContext: ExecutionContext,
@@ -29,20 +26,9 @@ class RecetteRepositoryImpl @Inject() (implicit
   override def findAll(limit: Int): Future[List[Recette]] = db
     .getCollection(collectionName)
     .find()
-    .map { element: Document =>
-      Recette(
-        element
-          .get("_id")
-          .map((v: BsonValue) => v.asObjectId().getValue.toString),
-        element
-          .get("nom")
-          .map((v: BsonValue) => v.asString().getValue)
-          .get,
-        element
-          .get("etapes")
-          .map((v: BsonValue) => fromBsonArrayToListEtape(v.asArray()))
-          .getOrElse(List.empty[Etape])
-      )
+    .map { elementDocument: Document =>
+      val element = elementDocument.toBsonDocument()
+      Recette.fromBsonDocumentToObject(element)
     }
     .toFuture()
     .map(_.toList)
@@ -52,8 +38,7 @@ class RecetteRepositoryImpl @Inject() (implicit
     .insertOne(
       Document(
         "nom" -> recette.nom,
-        "etape" -> recette
-          .etapes
+        "etape" -> recette.etapes
           .map { etape =>
             Document(
               "order" -> etape.order,
@@ -64,23 +49,4 @@ class RecetteRepositoryImpl @Inject() (implicit
     )
     .toFuture()
     .map(_ => ())
-
-  private def fromBsonArrayToListEtape(bsonArray: BsonArray): List[Etape] = {
-    bsonArray
-      .toArray
-      .map[Etape] {
-        case r: Document => Etape(
-          r
-            .get("order")
-            .map(v => v.asInt32().getValue)
-            .get,
-          r
-            .get("description")
-            .map(v => v.asString().getValue)
-            .get
-        )
-        case _ => Etape(1, "Erreur lol")
-      }
-      .toList
-  }
 }
