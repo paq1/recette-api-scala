@@ -1,4 +1,4 @@
-package controllers
+package api.controllers
 
 import models.Blague
 import play.api.libs.json.Json

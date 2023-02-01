@@ -4,10 +4,11 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET         /blague/               controllers.BlagueController.index()
-POST        /blague/create         controllers.BlagueController.create()
-GET         /recette/              controllers.RecetteController.index()
-POST        /recette/create        controllers.RecetteController.create()
+GET         /blague/               api.controllers.BlagueController.index()
+POST        /blague/create         api.controllers.BlagueController.create()
+GET         /recette/              api.controllers.RecetteController.index()
+POST        /recette/create        api.controllers.RecetteController.create()
+GET        /file-transfert        api.controllers.RecetteController.writeFile()
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file          controllers.Assets.versioned(path="/public", file: Asset)

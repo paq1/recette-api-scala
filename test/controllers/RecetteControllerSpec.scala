@@ -1,9 +1,12 @@
 package controllers
 
+import api.controllers.BlagueController
 import org.scalatestplus.play._
 import org.scalatestplus.play.guice._
 import play.api.test._
 import play.api.test.Helpers._
+
+import scala.concurrent.ExecutionContext
 
 /**
  * Add your spec here.
@@ -11,18 +14,9 @@ import play.api.test.Helpers._
  *
  * For more information, see https://www.playframework.com/documentation/latest/ScalaTestingWithScalaTest
  */
-class RecetteControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecting {
+class RecetteControllerSpec()(implicit ec: ExecutionContext) extends PlaySpec with GuiceOneAppPerTest with Injecting {
 
   "HomeController GET" should {
-
-    "render the index page from a new instance of controller" in {
-      val controller = new BlagueController(stubControllerComponents())
-      val home = controller.index().apply(FakeRequest(GET, "/"))
-
-      status(home) mustBe OK
-      contentType(home) mustBe Some("text/html")
-      contentAsString(home) must include ("Welcome to Play")
-    }
 
     "render the index page from the application" in {
       val controller = inject[BlagueController]
