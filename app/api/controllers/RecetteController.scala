@@ -2,6 +2,7 @@ package api.controllers
 
 import api.services.FileTransfertServiceApache
 import models.recette.Recette
+import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc._
 import repository.RecetteRepositoryImpl
@@ -13,11 +14,12 @@ import scala.util.control.NonFatal
 @Singleton
 class RecetteController @Inject() (
     val controllerComponents: ControllerComponents,
-    val blagueRepositoryImpl: RecetteRepositoryImpl
+    val blagueRepositoryImpl: RecetteRepositoryImpl,
+    val configuration: Configuration
 )(implicit ec: ExecutionContext)
     extends BaseController {
 
-  val fileTransfertService = new FileTransfertServiceApache
+  val fileTransfertService = new FileTransfertServiceApache(configuration)
 
   def index(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
@@ -38,7 +40,7 @@ class RecetteController @Inject() (
   def writeFile(): Action[AnyContent] = Action.async {
     implicit request: Request[AnyContent] =>
 
-      fileTransfertService.tranfertFile()
+      fileTransfertService.tranfertFile("test.txt")
         .map { _ =>
           Ok("tranfert reussi")
         }
